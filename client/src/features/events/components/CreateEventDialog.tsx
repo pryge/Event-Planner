@@ -2,7 +2,7 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { createEventSchema, CreateEventInput, Event } from '@/entities/event/model/types';
+import { createEventSchema, CreateEventInput } from '@/entities/event/model/types';
 import { useEventActions } from '@/features/events/model/useEvents';
 import {
   Dialog,
@@ -23,22 +23,20 @@ import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Textarea } from '@/shared/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select';
-import { Edit } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useState } from 'react';
 
-export function EditEventDialog({ event }: { event: Event }) {
+export function CreateEventDialog({ defaultDate }: { defaultDate?: Date }) {
   const [open, setOpen] = useState(false);
-  const { updateEvent, isUpdating } = useEventActions();
-
-  const formattedDate = new Date(event.date).toISOString().slice(0, 16);
+  const { createEvent, isCreating } = useEventActions();
 
   const form = useForm<CreateEventInput>({
     resolver: zodResolver(createEventSchema),
     defaultValues: {
-      title: event.title,
-      description: event.description || '',
-      date: formattedDate,
-      importance: event.importance,
+      title: '',
+      description: '',
+      date: defaultDate?.toISOString().slice(0, 16) || new Date().toISOString().slice(0, 16),
+      importance: 'LOW',
     },
   });
 
@@ -48,27 +46,25 @@ export function EditEventDialog({ event }: { event: Event }) {
       date: new Date(data.date).toISOString(),
     };
 
-    updateEvent(
-      { id: event.id, data: submitData },
-      {
-        onSuccess: () => {
-          setOpen(false);
-        },
-      }
-    );
+    createEvent(submitData, {
+      onSuccess: () => {
+        form.reset();
+        setOpen(false);
+      },
+    });
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-blue-600">
-          <Edit className="h-4 w-4" />
+        <Button size="icon" className="shrink-0 shadow-md">
+          <Plus className="w-5 h-5" />
         </Button>
       </DialogTrigger>
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit Event</DialogTitle>
+          <DialogTitle>Add New Event</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -141,8 +137,8 @@ export function EditEventDialog({ event }: { event: Event }) {
 
             </div>
 
-            <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={isUpdating}>
-              {isUpdating ? 'Saving...' : 'Save Changes'}
+            <Button type="submit" className="w-full" disabled={isCreating}>
+              {isCreating ? 'Creating...' : 'Create Event'}
             </Button>
 
           </form>
