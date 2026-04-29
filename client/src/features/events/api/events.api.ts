@@ -1,5 +1,5 @@
 import { api } from "@/lib/axios";
-import { CreateEventInput, importance } from "../types/events.types";
+import { CreateEventInput, importance, Event } from "../types/events.types";
 
 export const eventsApi = {
   getAll: (importance?: importance, search?: string) =>
