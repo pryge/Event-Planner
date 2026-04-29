@@ -10,13 +10,15 @@ import { Calendar } from '@/shared/ui/calendar';
 import { EventCard } from '@/entities/event/ui/EventCard';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select';
 import { CreateEventDialog } from '@/features/events/components/CreateEventDialog';
+import { useDebounce } from '@/shared/lib/useDebounce';
 
 export default function DashboardPage() {
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 500);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [importanceFilter, setImportanceFilter] = useState<importance | undefined>();
   
-  const { data: events, isLoading } = useEvents(importanceFilter, search);
+  const { data: events, isLoading } = useEvents(importanceFilter, debouncedSearch);
 
   const filteredEvents = useMemo(() => {
     if (!events) return [];

@@ -23,7 +23,7 @@ export class AuthService {
     });
 
     if (existingUser) {
-      throw new ConflictException('Uset with this email already exist');
+      throw new ConflictException('User with this email already exist');
     }
 
     const hashedPassword = await bcrypt.hash(dto.password, 10);
@@ -68,5 +68,48 @@ export class AuthService {
     if (!user) throw new NotFoundException('User not found');
 
     return user;
+  }
+
+  async validateGoogleUser(details: {
+    googleId: string;
+    email: string;
+    name: string;
+  }) {
+    let user = await this.prisma.user.findUnique({
+      where: { email: details.email },
+    });
+
+    if (user) {
+      if (!user.googleId) {
+        user = await this.prisma.user.update({
+          where: { email: details.email },
+          data: { googleId: details.googleId },
+        });
+      }
+      return user;
+    }
+
+    user = await this.prisma.user.create({
+      data: {
+        email: details.email,
+        name: details.name,
+        googleId: details.googleId,
+        password: null,
+      },
+    });
+
+    return user;
+  }
+
+  googleLogin(user: any) {
+    if (!user) {
+      throw new UnauthorizedException('No user from google');
+    }
+
+    const token = this.jwt.sign({ sub: user.id, email: user.email });
+    return {
+      access_token: token,
+      user,
+    };
   }
 }

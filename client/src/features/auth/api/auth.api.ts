@@ -45,3 +45,21 @@ export const useRegister = () => {
     },
   });
 };
+
+export const useGoogleLoginCallback = () => {
+  const login = useAuthStore((state) => state.login);
+  const router = useRouter();
+
+  return useMutation({
+    mutationFn: async (token: string) => {
+      const { data: user } = await api.get<User>('/auth/me', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return { access_token: token, user };
+    },
+    onSuccess: ({ access_token, user }) => {
+      login(access_token, user);
+      router.push('/dashboard');
+    },
+  });
+};
