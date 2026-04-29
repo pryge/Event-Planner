@@ -1,7 +1,7 @@
 'use client';
 
-import { useAuthStore } from '@/store/useAuthStore';
-import { Button } from '@/components/ui/button';
+import { useAuthStore } from '@/entities/user/model/useAuthStore';
+import { Button } from '@/shared/ui/button';
 import { useRouter } from 'next/navigation';
 import { CalendarDays, LogOut, User } from 'lucide-react';
 

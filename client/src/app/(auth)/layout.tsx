@@ -1,5 +1,5 @@
 'use client';
-import { useAuthStore } from '@/store/useAuthStore';
+import { useAuthStore } from '@/entities/user/model/useAuthStore';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 export default function AuthLayout({ children }: { children: React.ReactNode }) {

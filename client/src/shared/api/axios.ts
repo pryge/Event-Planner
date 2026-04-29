@@ -1,5 +1,5 @@
 
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/entities/user/model/useAuthStore";
 import axios from "axios";
 
 export const api = axios.create({

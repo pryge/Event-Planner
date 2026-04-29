@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { CreateEventInput, importance } from "../types/events.types";
+import { CreateEventInput, importance } from "@/entities/event/model/types";
 import { eventsApi } from "../api/events.api";
 
 export const useEvents = (importance?: importance, search?: string) => {
