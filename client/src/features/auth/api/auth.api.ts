@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { api } from '@/lib/axios';
+import { api } from '@/shared/api/axios';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useRouter } from 'next/navigation';
 import { LoginInput, RegisterInput, User } from '../types/auth.types';

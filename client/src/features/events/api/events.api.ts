@@ -1,4 +1,4 @@
-import { api } from "@/lib/axios";
+import { api } from "@/shared/api/axios";
 import { CreateEventInput, importance, Event } from "../types/events.types";
 
 export const eventsApi = {
